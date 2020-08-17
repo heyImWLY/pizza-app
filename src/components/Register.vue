@@ -43,7 +43,7 @@ import axios from 'axios'
     data(){
       return {
         email:'',
-        password:'',
+        password:'', 
         confirmPassword:''
       }
     },
@@ -61,13 +61,20 @@ import axios from 'axios'
           // axios.post('/users.json',formData)
           //      .then(res => this.$router.push({name:'loginLink'}))
 
-          axios.post('http://localhost:5000/api/users/register', formData)
+          axios.post('http://localhost:5000/api/user/register', formData)
             .then(res => {
               console.log(res)
-              this.$router.push({name: 'loginLink'})
+              if(res.data.success) {
+                this.$router.push({name: 'loginLink'})
+              } else {
+                for(let prop in res.data) {
+                  alert(res.data[prop])
+                }
+              }
             })
+            .catch(err => console.log(err))
 
-        }else{
+        } else {
           alert("两次密码不一致!")
         }
       }

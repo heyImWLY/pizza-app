@@ -40,36 +40,54 @@ export default {
   },
   methods: {
     onSubmit() {
-      axios.get("/users.json").then(res => {
-        //  console.log(res.data)
-        const data = res.data;
-        const users = [];
-        for (let key in data) {
-          const user = data[key];
-          // console.log(user)
-          users.push(user);
-        }
+      // axios.get("/users.json").then(res => {
+      //   //  console.log(res.data)
+      //   const data = res.data;
+      //   const users = [];
+      //   for (let key in data) {
+      //     const user = data[key];
+      //     // console.log(user)
+      //     users.push(user);
+      //   }
 
-        // console.log(users)
+      //   // console.log(users)
 
-        // 实现过滤
-        let result = users.filter(user => {
-          return user.email === this.email && user.password === this.password;
-        });
+      //   // 实现过滤
+      //   let result = users.filter(user => {
+      //     return user.email === this.email && user.password === this.password;
+      //   });
 
-        // console.log(result)
-        // 判断result的长度是否大于0
-        if (result != null && result.length > 0) {
-          this.$store.dispatch("setUser", result[0].email);
-          this.$router.push({ name: "homeLink" });
-          this.$store.dispatch("setLogin", true);
-          localStorage.setItem("user", result[0].email);
-        } else {
-          alert("账号或密码错误!");
-          this.$store.dispatch("setUser", null);
-          this.$store.dispatch("setLogin", false);
-        }
-      });
+      //   // console.log(result)
+      //   // 判断result的长度是否大于0
+      //   if (result != null && result.length > 0) {
+      //     this.$store.dispatch("setUser", result[0].email);
+      //     this.$router.push({ name: "homeLink" });
+      //     this.$store.dispatch("setLogin", true);
+      //     localStorage.setItem("user", result[0].email);
+      //   } else {
+      //     alert("账号或密码错误!");
+      //     this.$store.dispatch("setUser", null);
+      //     this.$store.dispatch("setLogin", false);
+      //   }
+      // });
+
+      const user = {
+        email: this.email,
+        password: this.password
+      }
+      axios.post('http://localhost:5000/api/user/login', user)
+        .then(res => {
+          console.log(res);
+          if(res.data.success) {
+            // 存储token
+            alert('登录成功')
+          } else {
+            for(let prop in res.data) {
+              alert(res.data[prop])
+            }
+          }
+        })
+        .catch(err => console.log(err))
     }
   }
 };
